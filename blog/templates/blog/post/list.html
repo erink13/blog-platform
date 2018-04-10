@@ -12,4 +12,6 @@
     </p>
     {{ post.body|truncatewords:30|linebreaks }}
   {% endfor %}
+<!--page object we are passing to the template is posts, include pagination template in the post list-->
+  {% include "pagination.html" with page=posts %}
 {% endblock %}
