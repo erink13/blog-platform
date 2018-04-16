@@ -5,7 +5,7 @@ from .models import Post
 
 #takes request as the only parameter
 #this parameter is required by all views
-def post_list(request):
+def post_list(request, category=None):
     object_list = Post.published.all() #all posts with published status
     paginator = Paginator(object_list, 3) # instantiate paginator object with 3 posts in each page
     page = request.GET.get('page') # get page get parameter to indicate curr page number
@@ -19,6 +19,12 @@ def post_list(request):
         posts = paginator.page(paginator.num_pages)
         #pass page number and retrieved objects to the template
     return render(request, 'blog/post/list.html', {'page': page,'posts': posts}) #render list of posts
+
+class PostListView(ListView):
+    queryset = Post.published.all()
+    context_object_name = 'posts'
+    paginate_by = 3
+    template_name = 'blog/post/list.html'
 
 #post detail - every post can be identified by date and slug
 def post_detail(request, year, month, day, post):
