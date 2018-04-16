@@ -1,7 +1,10 @@
 from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.views.generic import ListView
+from django.core.mail import send_mail
 from .models import Post
+from .forms import EmailPostForm
+
 
 #takes request as the only parameter
 #this parameter is required by all views
@@ -28,6 +31,38 @@ class PostListView(ListView):
 
 #post detail - every post can be identified by date and slug
 def post_detail(request, year, month, day, post):
+    #get post by ID and makes sure it is published
     post = get_object_or_404(Post, slug=post, status='published', publish__year=year, publish__month=month, publish__day=day)
     #if no object is found returns a 404 error
     return render(request, 'blog/post/detail.html', {'post': post})
+
+def post_share(request, post_id):
+    # Retrieve post by id
+    post = get_object_or_404(Post, id=post_id, status='published')
+    sent = False
+
+    #form was submitted and needs to be processed (why we use POST not get)
+    #get - get request - we should display an empty form
+    if request.method == 'POST':
+        # Form was submitted
+        #1. when view is loaded with get request, create new form instance used to display empty form
+        form = EmailPostForm(request.POST)
+        #2. user fills and submits by post - create form instance using submitted data
+
+        #3. validate form using this method - true if all fields contain valid data
+        if form.is_valid():
+            #5. Form fields passed validation - retrieve data with the cleaned_data method
+            #cleaned-data only returns valid fields!
+            cd = form.cleaned_data
+            #build complete URL including HTTP schema and hostname
+            post_url = request.build_absolute_uri(post.get_absolute_url())
+            subject = '{} ({}) recommends you reading "{}"'.format(cd['name'], cd['email'], post.title)
+            message = 'Read "{}" at {}\n\n{}\'s comments: {}'.format(post.title, post_url, cd['name'], cd['comments'])
+            send_mail(subject, message, 'admin@myblog.com', [cd['to']])
+            sent = True
+    else:
+        #4. if not valid, render the form in the template again with validation errors
+        form = EmailPostForm()
+    return render(request, 'blog/post/share.html', {'post': post,
+                                                    'form': form,
+                                                    'sent': sent})
