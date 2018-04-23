@@ -54,14 +54,13 @@ def post_detail(request, year, month, day, post):
         comment_form = CommentForm()
 
     # List of similar posts
-    post_tags_ids = post.tags.values_list('id', flat=True)
-    similar_posts = Post.published.filter(tags__in=post_tags_ids).exclude(id=post.id)
-    similar_posts = similar_posts.annotate(same_tags=Count('tags')).order_by('-same_tags',
-                                                                             '-publish')[:4]
+    #post_tags_ids = post.tags.values_list('id', flat=True)
+    #similar_posts = Post.published.filter(tags__in=post_tags_ids).exclude(id=post.id)
+    #similar_posts = similar_posts.annotate(same_tags=Count('tags')).order_by('-same_tags', '-publish')[:4]
+
     return render(request, 'blog/post/detail.html', {'post': post,
                                                      'comments': comments,
-                                                     'comment_form': comment_form,
-                                                     'similar_posts': similar_posts})
+                                                     'comment_form': comment_form})
 
 def post_share(request, post_id):
     # Retrieve post by id
