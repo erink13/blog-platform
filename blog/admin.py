@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Post
+from .models import Post, Comment
 
 #tell the django admin site that our model is registered into the admin site using
 #custom class that inherits from model admin
@@ -16,3 +16,9 @@ class PostAdmin(admin.ModelAdmin):
 
 #registered this model with the admin site -appears on the admin page now
 admin.site.register(Post, PostAdmin)
+
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ('name', 'email', 'post', 'created', 'active')
+    list_filter = ('active', 'created', 'updated')
+    search_fields = ('name', 'email', 'body')
+admin.site.register(Comment, CommentAdmin)
