@@ -15,10 +15,17 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
+from django.contrib.sitemaps.views import sitemap
+from blog.sitemaps import PostSitemap
+
+sitemaps = {
+    'posts': PostSitemap,
+}
 
 #telling it to include URL patterns defined in blog urls.py file under the blog path
 #give them a namespace called blogs
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^blog/', include('blog.urls', namespace='blog', app_name='blog')),
+    url(r'^sitemap\.xml$', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
 ]

@@ -29,6 +29,9 @@ DEBUG = True
 # note: not applied while debug mode is on - but once we set it to false, add domain / host to this setting
 ALLOWED_HOSTS = []
 
+#new setting for the site id
+SITE_ID = 1
+
 
 # Application definition
 # note: tells django which applications are active for this site
@@ -40,6 +43,8 @@ INSTALLED_APPS = [
     'django.contrib.messages', #messaging framework
     'django.contrib.staticfiles', #framework to manage static files,
     'blog', #activate our application - lets django keep track of this application!
+    'django.contrib.sites',
+    'django.contrib.sitemaps',
 ]
 
 # note: contains middlewares to be executed
