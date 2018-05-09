@@ -30,7 +30,7 @@ def post_list(request, tag_slug=None):
         # If page is out of range deliver last page of results
         posts = paginator.page(paginator.num_pages)
         #pass page number and retrieved objects to the template
-    return render(request, 'blog/post/list.html', {'page': page,'posts': posts,'tag': tag}) #render list of posts
+    return render(request, 'blog/post/list.html', {'page': page, 'posts': posts, 'tag': tag}) #render list of posts
 
 class PostListView(ListView):
     queryset = Post.published.all()
