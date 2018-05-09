@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'blog', #activate our application - lets django keep track of this application!
     'django.contrib.sites',
     'django.contrib.sitemaps',
+    'taggit',
 ]
 
 # note: contains middlewares to be executed
